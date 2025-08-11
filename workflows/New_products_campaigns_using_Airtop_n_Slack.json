@@ -1,0 +1,364 @@
+{
+  "name": "New products/campaigns: Airtop n Slack",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "extraction",
+        "operation": "query",
+        "sessionMode": "new",
+        "url": "https://www.producthunt.com/",
+        "profileName": "jkspeaks",
+        "prompt": "=Extract up to 5 product launches that are {{ $json[\"Relevant Products\"] }} for each product extract the title and URL (if exists).\n\nReturn format:\nToday's [{{ $json[\"Relevant Products\"] }}] on Producthunt\n1. Title 1 (URL 1)\n2. Title 2 (URL 2)\nand so on.\n\nIf you cannot find any relevant products, return [NA]",
+        "additionalFields": {}
+      },
+      "id": "ffb0289e-9341-4641-bfcd-41b25f0b1379",
+      "name": "Look up products",
+      "type": "n8n-nodes-base.airtop",
+      "position": [
+        800,
+        288
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "airtopApi": {
+          "id": "3E80zpzB3UgJELr7",
+          "name": "Airtop account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09A4GKCEM7",
+          "mode": "list",
+          "cachedResultName": "all-jkspeaks"
+        },
+        "text": "={{ $json.data.modelResponse }}",
+        "otherOptions": {}
+      },
+      "id": "4d1f0668-d5d5-4440-8608-3cfe3d61d0c0",
+      "name": "Send slack message",
+      "type": "n8n-nodes-base.slack",
+      "position": [
+        1248,
+        480
+      ],
+      "webhookId": "9887477b-9680-4701-a2a1-583d47f1fb5d",
+      "typeVersion": 2.3,
+      "credentials": {
+        "slackApi": {
+          "id": "mn51Uv0JJ2QCnuYw",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "id": "921d283e-6d67-4aaa-a344-687bb23b8710",
+      "name": "Trigger daily",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        352,
+        240
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        352,
+        624
+      ],
+      "id": "b5b6d2e0-657a-48c3-a0e1-d15a030b2c89",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1024,
+        464
+      ],
+      "id": "aaf4fe4d-8ba6-4d2a-8785-044c17fe78a8",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a83156e0-1782-4d0a-a15c-1ff889ff915d",
+              "name": "Relevant Products",
+              "type": "string",
+              "value": "AI agent"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3cf0b7e0-ec9f-4173-bc85-1b4daef5aa22",
+      "name": "Keyword - ProductHunt",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        576,
+        288
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a83156e0-1782-4d0a-a15c-1ff889ff915d",
+              "name": "Relevant Products",
+              "type": "string",
+              "value": "Smart AI"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2bb49b7b-37e3-45c2-bd3c-b78e7209dd07",
+      "name": "Keyword - Indiegogo&KS",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        576,
+        576
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "resource": "extraction",
+        "operation": "query",
+        "sessionMode": "new",
+        "url": "https://www.indiegogo.com/explore/all?project_timing=all&product_stage=all&ended_campaigns_included=false&sort=trending&q=smart%20ai",
+        "profileName": "jkspeaks",
+        "prompt": "=Extract up to 5 product launches that are {{ $json[\"Relevant Products\"] }} for each product extract the title and URL (if exists).\n\nReturn format:\nToday's [{{ $json[\"Relevant Products\"] }}] on Indiegogo\n1. Title 1 (URL 1)\n2. Title 2 (URL 2)\nand so on.\n\nIf you cannot find any relevant products, return [NA]",
+        "additionalFields": {}
+      },
+      "id": "cfcd6218-cda3-4d07-92e2-842a3bf0b1a9",
+      "name": "Look up campaigns",
+      "type": "n8n-nodes-base.airtop",
+      "position": [
+        800,
+        480
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "airtopApi": {
+          "id": "3E80zpzB3UgJELr7",
+          "name": "Airtop account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "extraction",
+        "operation": "query",
+        "sessionMode": "new",
+        "url": "https://www.kickstarter.com/discover/advanced?ref=nav_search&term=smart%20ai",
+        "profileName": "jkspeaks",
+        "prompt": "=Extract up to 5 product launches that are {{ $json[\"Relevant Products\"] }} for each product extract the title and URL (if exists).\n\nReturn format:\nToday's [{{ $json[\"Relevant Products\"] }}] on Kickstarter\n1. Title 1 (URL 1)\n2. Title 2 (URL 2)\nand so on.\n\nIf you cannot find any relevant products, return [NA]",
+        "additionalFields": {}
+      },
+      "id": "e3603927-8227-4e46-8c56-5984d14948e9",
+      "name": "Look up campaigns2",
+      "type": "n8n-nodes-base.airtop",
+      "position": [
+        800,
+        672
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "airtopApi": {
+          "id": "3E80zpzB3UgJELr7",
+          "name": "Airtop account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "552c61c2-1ec0-40b5-b473-2423b646418b",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              },
+              "leftValue": "={{ $json.data.modelResponse }}",
+              "rightValue": "[NA]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5b77a8d1-3e53-49ea-9191-118a5c02d060",
+      "name": "Found products?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        352,
+        896
+      ],
+      "typeVersion": 2.2
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Trigger daily": {
+      "main": [
+        [
+          {
+            "node": "Keyword - ProductHunt",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Keyword - Indiegogo&KS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Look up products": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Keyword - ProductHunt",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Keyword - Indiegogo&KS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Send slack message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keyword - ProductHunt": {
+      "main": [
+        [
+          {
+            "node": "Look up products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keyword - Indiegogo&KS": {
+      "main": [
+        [
+          {
+            "node": "Look up campaigns",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Look up campaigns2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Look up campaigns": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Look up campaigns2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Found products?": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "1c40c523-4f04-4fe4-a8b8-fcb917fcf553",
+  "meta": {
+    "templateId": "3481",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ebe42ff2f709e7b4813d2b9f8513866ef26fa0c0c472f3b1826e84cae23540d2"
+  },
+  "id": "ARj8EcJcxtg5n6I7",
+  "tags": [
+    {
+      "createdAt": "2025-08-11T00:00:48.599Z",
+      "updatedAt": "2025-08-11T00:00:48.599Z",
+      "id": "7BAmXKxxzCZJydK6",
+      "name": "airtop"
+    },
+    {
+      "createdAt": "2025-08-11T00:01:12.133Z",
+      "updatedAt": "2025-08-11T00:01:12.133Z",
+      "id": "Y9xOcM7VKbpV9uMg",
+      "name": "slack"
+    }
+  ]
+}
